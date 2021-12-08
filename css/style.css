@@ -1,0 +1,120 @@
+body {
+
+    display: grid;
+    grid-template-areas:
+"header header header"
+"nav article ads"
+"nav footer footer";
+
+    grid-template-rows: 140px 1fr 70px;
+    grid-template-columns: 20% auto auto;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+    height: 100vh;
+    margin: 0;
+    background-color: white !important;
+    font-family: sans-serif;
+}
+
+header, footer, article, nav, div {
+    padding: 1.2em;
+}
+#pageHeader {
+    grid-area: header;
+    background-color: aliceblue;
+}
+#pageFooter {
+    grid-area: footer;
+    background-color: #fff;
+
+}
+#mainArticle {
+
+    grid-area: article;
+    background-color: white;
+}
+
+#mainNav {
+
+    grid-area: nav;
+    background-color: cornsilk;
+}
+
+#mainNav ul {
+    list-style: none;
+
+}
+
+#mainNav ul li {
+    padding: 10px;
+
+}
+
+#mainNav ul li a {
+    text-decoration: none;
+    font-size: 20px;
+}
+
+#siteAds {
+
+    grid-area: ads;
+
+}
+
+/* Stack the layout on small devices/viewports. */
+
+@media all and (max-width: 575px) {
+
+    body {
+        grid-template-areas:
+"header"
+"article"
+"ads"
+"nav"
+"footer";
+        grid-template-rows: 80px 1fr 70px 1fr 70px;
+        grid-template-columns: 1fr;
+    }
+
+}
+.product_details label, .customer_details label{
+    width: 70px;
+    display: inline-block;
+}
+
+.product_details input, .customer_details input, select#category{
+    padding: 10px 15px;
+    display: inline-block;
+    border-radius: 5px;
+    border:1px solid;
+}
+
+thead th {
+    padding: 15px;
+    /*display: inline-block;*/
+}
+.button{
+    padding: 10px 30px;
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+
+.table td, .table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table tr:nth-child(even){background-color: #f2f2f2;}
+
+.table tr:hover {background-color: #ddd;}
+
+.table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+}

@@ -1,0 +1,94 @@
+
+<html lang="en">
+
+<head>
+ <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Transaction</title>
+  <link rel="stylesheet" href="transactionLog.css">
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+</head>
+<body onload="fetchAllReceipts()">
+  <main id="main-holder">
+    <h1>Transaction</h1>
+	<div id="receipts" style="display:contents">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Bill No</th>
+					<th>Items</th>
+					<th>Customer Name</th>
+					<th>Mobile Number</th>
+					<th>Total</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
+
+  </main>
+</body>
+<script>
+function fetchAllReceipts() {
+		$("#receipts tbody").empty();
+        //console.log('http call: ' + uri + "/" + documentShareId)
+        $.ajax({
+            url: "http://localhost:8080/transaction/transaction-list",
+            type: "GET",
+            contentType: "application/json;",
+			headers:
+                    {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'requester': '{"username": "admin@asd.com","authorities": "ROLE_ADMIN"}'
+
+                    },
+            cache: false,
+            success: function (receipts) {
+                //console.log(receipts);
+
+                $(receipts.data).each(function (index, item) {
+                    console.log("item " + item);
+                    //console.log(receipts[index]);
+					let products= "";
+					for(col = 0; col < item.items.length; col++) {
+					products = products + ", " + item.items[col]
+					}
+                    $('#receipts tbody').append(
+                        '<tr><td>' + item.billNo +
+                        '</td><td>' + products +
+                        '</td><td>' + item.customerName +
+                        '</td><td>' + item.mobileNumber +
+						'</td><td>' + item.total +
+						'</td><td>' + item.date +
+                        '</td></tr>'
+                    )
+
+                });
+
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+
+            }
+
+        });
+    }
+
+</script>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Registration</title>
+  <link rel="stylesheet" href="login.css">
+  
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <main id="main-holder-reg">
+    <h1>Registration</h1>
+      <input type="text" name="username" id="username-field" class="login-form-field" placeholder="username">
+	  <input type="text" name="name" id="name-field" class="login-form-field" placeholder="name">
+	  <input type="text" name="mobile-number" id="mobile-number-field" class="login-form-field" placeholder="mobile number">
+	  <input type="text" name="address" id="address-field" class="login-form-field" placeholder="address">
+	  <input type="password" name="password" id="password-field" class="login-form-field" placeholder="password">
+      <input type="password" name="admin-password" id="admin-password-field" class="login-form-field" placeholder="admin password">
+      <input style="padding-left: 50px; padding-right: 50px; padding-top: 5px; padding-bottom: 5px; margin-bottom: 30px;" type="submit" value="Enter" onclick="registrationAction()">
+  </main>
+</body>
+
+<script>
+
+    function registrationAction()
+    {
+	
+        let username = document.getElementById("username-field").value
+        let name = document.getElementById("name-field").value
+		let mobileNumber = document.getElementById("mobile-number-field").value
+        let address = document.getElementById("address-field").value
+		let adminPassword = document.getElementById("admin-password-field").value
+        let password = document.getElementById("password-field").value
+
+        $.ajax(
+            {
+                url: "http://localhost:8080/registration",
+                type: "POST",
+                accept: "application/json",
+                contentType: "application/json",
+                headers:
+                    {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'requester': '{"username": "admin@asd.com","authorities": "ROLE_ADMIN"}'
+
+                    },
+                data: JSON.stringify({
+					name:  name.toString(),
+                    username : username.toString(),
+                    password : password.toString(),
+					mobileNumber: mobileNumber.toString(),
+					address: address.toString,
+					adminPassword: adminPassword.toString
+					
+                }),
+                dataType: 'json',
+                success: function (response)
+                {
+                    alert("success");
+                    location.href='login.html';
+
+                }
+                , error: function (error) {
+                    alert(error.message);
+                }
+            }
+        )
+    }
+
+</script>
+</html>

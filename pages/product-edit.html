@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+<body>
+<header id="pageHeader">
+    <h1>XYZ General Store</h1>
+    <h4>Add New Product</h4>
+</header>
+
+<article id="mainArticle">
+
+    <main id="main-holder">
+        <h1>Edit Product</h1>
+        <input style=" padding: 20px 50px; border-radius: 10px;display: inline-block; border: 1px solid #ccc" type="text" name="category" id="category-field" class="product-form-field" placeholder="category">
+        <br>
+        <br>
+        <input style=" padding: 20px 50px; border-radius: 10px;display: inline-block; border: 1px solid #ccc" type="text" name="product" id="product-field" class="product-form-field" placeholder="product">
+        <br>
+        <br>
+        <input style=" padding: 20px 50px; border-radius: 10px;display: inline-block; border: 1px solid #ccc" type="text" name="price" id="price-field" class="product-form-field" placeholder="price">
+        <br>
+        <br>
+        <input style=" padding: 20px 50px; border-radius: 10px;display: inline-block; border: 1px solid #ccc" type="text" name="quantity" id="quantity-field" class="product-form-field" placeholder="quantity">
+        <br>
+        <br>
+        <input class="button" type="submit" value="Update" onclick="productChange()">
+    </main>
+
+</article>
+
+<nav id="mainNav">
+    <ul>
+        <li><a href="../index.html">Main Menu</a></li>
+        <li><a href="product.html">Add Product</a></li>
+        <li><a href="checkout.html">Checkout</a></li>
+        <li><a href="transactionLog.html">Transaction Log</a></li>
+        <li><a href="product-edit.html">Edit Products</a></li>
+        <li><a href="change-password.html">Change Password</a></li>
+        <li><a href="login.html">Logout</a></li>
+    </ul>
+
+</nav>
+
+<footer id="pageFooter">@Copyright</footer>
+
+<script src="../js/main.js"></script>
+<script>
+    $(document).ready(function (){
+        var productId = getUrlVars()["id"];
+
+        fetchProduct(productId);
+    });
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+    function fetchProduct(productId) {
+        let category = document.getElementById("category-field")
+        let name = document.getElementById("product-field")
+        let price = document.getElementById("price-field")
+        let quantity = document.getElementById("quantity-field")
+
+        $.ajax(
+            {
+                url: "http://localhost:8080/product/"+productId,
+                type: "get",
+                accept: "application/json",
+                contentType: "application/json",
+                headers:
+                    {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'requester': '{"username": "admin@asd.com","authorities": "ROLE_ADMIN"}'
+
+                    },
+                dataType: 'json',
+                success: function (response) {
+                   let productInfo = response.data;
+
+                   category.value = productInfo.category;
+                   name.value = productInfo.name;
+                   price.value = productInfo.price;
+                   quantity.value = productInfo.quantity;
+
+                }
+                , error: function (error) {
+                    alert(error.message);
+                }
+            }
+        )
+    }
+
+    function productChange() {
+        let category = document.getElementById("category-field").value
+        let name = document.getElementById("product-field").value
+        let price = document.getElementById("price-field").value
+        let quantity = document.getElementById("quantity-field").value
+
+        var productId = getUrlVars()["id"];
+
+        $.ajax(
+            {
+                url: "http://localhost:8080/product/"+productId,
+                type: "PUT",
+                accept: "application/json",
+                contentType: "application/json",
+                headers:
+                    {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'requester': '{"username": "admin@asd.com","authorities": "ROLE_ADMIN"}'
+
+                    },
+                data: JSON.stringify({
+                    name: name.toString(),
+                    price: parseInt(price),
+                    category: category.toString(),
+                    quantity: parseInt(quantity)
+
+                }),
+                dataType: 'json',
+                success: function (response) {
+                    alert("success");
+                    location.href='index.html';
+
+                }
+                , error: function (error) {
+                    alert(error.message);
+                }
+            }
+        )
+    }
+</script>
+</body>
+</html>

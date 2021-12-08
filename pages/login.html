@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Login</title>
+  <link rel="stylesheet" href="login.css">
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body onload="onLoadAction()">
+  <main id="main-holder">
+    <h1>Login</h1>
+	 <input type="text" name="username" id="username-field" class="login-form-field" placeholder="username">
+	 <div class="row">
+		<input style="margin-left: 50px;" type="password" name="password" id="password-field" class="login-form-field" placeholder="password">
+		<input type="submit" value="Login" style="margin-bottom:5px;"onclick="loginAction()">
+	 </div>
+	 <div class="container">
+		<div class="row">
+		<button style="margin-left: 50px;" onclick="location.href='registration.html'">Registration</button>
+		<button style="margin-left: 10px;"onclick="location.href='change-password.html'">Forget Password</button>
+		</div>
+	</div>
+  </main>
+</body>
+
+<script>
+
+	function onLoadAction(){
+		sessionStorage.removeItem('requester');
+	}
+    function loginAction()
+    {
+	   
+        let username = document.getElementById("username-field").value
+        let password = document.getElementById("password-field").value
+
+		
+        $.ajax(
+            {
+                url: "http://localhost:8080/login",
+                type: "POST",
+                accept: "application/json",
+                contentType: "application/json",
+                headers:
+                    {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'requester': '{"username": "admin@asd.com","authorities": "ROLE_ADMIN"}'
+
+                    },
+                data: JSON.stringify({
+                    username : username.toString(),
+                    password : password.toString()
+                }),
+                dataType: 'json',
+                success: function (response)
+                {
+					console.log(response);
+					if (response.message === "Success"){
+					const requester = {
+						username: response.data.username,
+						authorities: response.data.authority,
+					}
+					
+					//console.log("User ", requester);
+					window.sessionStorage.setItem('requester',JSON.stringify(requester));
+					//location.href="<?php echo "index.html?requester="$row['requester'] ?>"
+					
+					if (requester.authorities === "ROLE_ADMIN") {
+						location.href='index.html';
+					} else if(requester.authorities === "ROLE_EMPLOYEE"){
+						location.href='checkout.html';
+					}
+				
+					} else {
+						alert("Unauthorized User");
+					}
+
+                }
+                , error: function (error) {
+                    alert(error.message);
+                }
+            }
+        )
+    }
+
+</script>
+</html>

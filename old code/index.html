@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body onload="fetchAllProduct()">
+
+
+<header id="pageHeader">
+    <h1>XYZ General Store</h1>
+    <h4>Add New Product</h4>
+</header>
+
+<article id="mainArticle">
+
+    <h1>Product List</h1>
+    <div id="receipts" style="display:contents">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+    </div>
+
+</article>
+
+<nav id="mainNav">
+    <ul>
+        <li><a href="">Main Menu</a></li>
+        <li><a href="pages/product.html">Add Product</a></li>
+        <li><a href="pages/checkout.html">Checkout</a></li>
+        <li><a href="pages/transactionLog.html">Transaction Log</a></li>
+        <li><a href="pages/product-edit.html">Edit Products</a></li>
+        <li><a href="pages/change-password.html">Change Password</a></li>
+        <li><a href="pages/login.html">Logout</a></li>
+    </ul>
+
+</nav>
+
+<footer id="pageFooter">@Copyright</footer>
+<script>
+    function fetchAllProduct() {
+        $("#receipts tbody").empty();
+        //console.log('http call: ' + uri + "/" + documentShareId)
+        $.ajax({
+            url: "http://localhost:8080/product/product-list",
+            type: "GET",
+            contentType: "application/json;",
+            headers:
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Credentials': 'true',
+                    'requester': '{"username": "admin@asd.com","authorities": "ROLE_ADMIN"}'
+
+                },
+            cache: false,
+            success: function (receipts) {
+                //console.log(receipts);
+
+                $(receipts.data).each(function (index, item) {
+                    console.log("item " + item);
+                    //console.log(receipts[index]);
+
+                    $('#receipts tbody').append(
+                        '<tr>' +
+                        '<td>' + item.name + '</td>' +
+                        '<td>' + item.price + '</td>' +
+                        '<td>' + item.category + '</td>' +
+                        '<td>' + item.quantity + '</td>' +
+                        '<td><a href="pages/product-edit.html?id='+item.id+'">Update</a></td>' +
+                        '</tr>'
+                    )
+
+                });
+
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                console.log(textStatus);
+                console.log(errorThrown);
+
+            }
+
+        });
+    }
+
+</script>
+
+</body>
+</html>
